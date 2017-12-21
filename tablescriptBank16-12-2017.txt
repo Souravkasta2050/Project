@@ -1,0 +1,221 @@
+CREATE TABLE Account_Master (Account_ID NUMBER(10) primary key, Account_Type VARCHAR2(25), Account_Balance NUMBER(15) ,Open_Date DATE);
+
+CREATE TABLE Customer(customer_id NUMBER (10) PRIMARY KEY,Account_ID NUMBER(10) references Account_master(Account_id),user_id NUMBER references user_table(user_id),customer_name VARCHAR2(50), Email VARCHAR2(30), Address VARCHAR2(100), Pancard VARCHAR2(15));
+
+CREATE TABLE Transactions(Transaction_ID NUMBER(10) PRIMARY KEY ,DateofTransaction DATE , TransactionType VARCHAR2(10),TranAmount NUMBER(15) ,Account_ID NUMBER(10) references ACCount_Master(account_id));
+
+CREATE TABLE Service_Tracker(Service_ID NUMBER(10) PRIMARY KEY, Account_ID NUMBER references account_master(account_id), Service_Raised_Date DATE,Service_status VARCHAR2(20));
+
+CREATE TABLE User_Table(user_id NUMBER PRIMARY KEY,login_password VARCHAR2(15),secret_question VARCHAR2(50),Secret_Answer VARCHAR2(15),lock_status VARCHAR2(10));
+
+CREATE TABLE Fund_Transfer(FundTransfer_ID NUMBER(10) PRIMARY KEY ,Account_ID NUMBER(10) references Account_Master(Account_ID),Payee_Account_ID NUMBER(10)references PayeeTable(Payee_Account_Id), Date_Of_Transfer DATE, Transfer_Amount NUMBER(15));
+
+CREATE TABLE Payee_Table(Payee_Account_Id NUMBER(5) PRIMARY KEY,Account_Id NUMBER references Account_Master(Account_ID),Nick_name VARCHAR2(40));
+
+____________________________________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________________________________
+CREATE TABLE Account_Master (Account_ID NUMBER(10) primary key, Account_Type VARCHAR2(25), Account_Balance NUMBER(15,2) ,Open_Date DATE);
+
+CREATE TABLE Customer(
+customer_id NUMBER (10) PRIMARY KEY,
+Account_ID NUMBER(10) references Account_master(Account_id),
+user_id NUMBER references user_table(user_id),
+customer_name VARCHAR2(50), 
+Email VARCHAR2(30), 
+Address VARCHAR2(100),
+Pancard VARCHAR2(15));
+
+CREATE TABLE Transactions(Transaction_ID NUMBER(10) PRIMARY KEY ,DateofTransaction DATE , TransactionType VARCHAR2(10),TranAmount NUMBER(15) ,Account_ID NUMBER(10) references ACCount_Master(account_id));
+
+CREATE TABLE Service_Tracker(Service_ID NUMBER(10) PRIMARY KEY, Account_ID NUMBER references account_master(account_id), Service_Raised_Date DATE,Service_status VARCHAR2(20));
+
+CREATE TABLE User_Table(user_id NUMBER PRIMARY KEY,login_password VARCHAR2(15),secret_question VARCHAR2(50),Secret_Answer VARCHAR2(15),lock_status VARCHAR2(10));
+
+CREATE TABLE Fund_Transfer(FundTransfer_ID NUMBER(10) PRIMARY KEY ,Account_ID NUMBER(10) references Account_Master(Account_ID),Payee_ID NUMBER(10)references Payee_Table(Payee_Id), Date_Of_Transfer DATE, Transfer_Amount NUMBER(15));
+
+CREATE TABLE Payee_Table(Payee_Id NUMBER(5) PRIMARY KEY, Payee_Account_Id NUMBER(10) ,Account_Id NUMBER references Account_Master(Account_ID),Nick_name VARCHAR2(40));
+
+
+ALTER TABLE Account_master ADD user_id NUMBER references user_table(user_id);
+ALTER TABLE transactions delete transaction_type;
+ALTER TABLE transactions drop constraint foreign key;
+select constraint_name from information_schema.table_constraints where table_name='Fund_Transfer';
+____________________________________________________________________________________________________________________________________________________________
+
+CREATE SEQUENCE seq_Account_Master start with 1000000001;
+
+CREATE SEQUENCE seq_Customer start with 1001;
+
+CREATE SEQUENCE seq_Transactions start with 101;
+
+CREATE SEQUENCE seq_TranAccount start with 20006;
+
+CREATE SEQUENCE seq_Service_Tracker start with 6546;
+
+CREATE SEQUENCE seq_User_Table start with 9000;
+
+CREATE SEQUENCE seq_Transaction_password start with 4567;
+
+CREATE SEQUENCE seq_Fund_Transfer start with 12323;
+
+CREATE SEQUENCE seq_PayeeTable start with 8765;
+
+____________________________________________________________________________________________________________________________________________________________
+
+//ACCOUNT MASTER VALUES
+
+insert into Account_Master values(seq_Account_Master.nextval,'savings',200000,SYSDATE);
+
+insert into Account_Master values(seq_Account_Master.nextval,'current',100000,SYSDATE);
+
+insert into Account_Master values(seq_Account_Master.nextval,'savings',2000000,SYSDATE);
+
+insert into Account_Master values(seq_Account_Master.nextval,'savings',300000,SYSDATE);
+
+insert into Account_Master values(seq_Account_Master.nextval,'current',500000,SYSDATE);
+
+
+//User_Table values
+
+insert into User_Table values(seq_User_Table.nextval,'xyz','What is your pet name','tiger','open');
+
+insert into User_Table values(seq_User_Table.nextval,'abc','What is your mother maiden  name','Rajini','open');
+
+insert into User_Table values(seq_User_Table.nextval,'qwer','What is your middle  name','rahul','open');
+
+insert into User_Table values(seq_User_Table.nextval,'asdf','What is your nick name','shubh','open');
+
+insert into User_Table values(seq_User_Table.nextval,'abc','What is your favourite holiday destination','paris','open');
+
+
+
+//CUSTOMER VALUES
+
+insert into Customer values(seq_Customer.NEXTVAL,seq_Account_Master.CURRval,seq_User_Table.CURRVAL,'shubam','shubam@vaya.com','Chennai,Tamil Nadu','CEKA12345P');
+
+insert into Customer values(seq_Customer.NEXTVAL,seq_Account_Master.CURRval,seq_User_Table.CURRVAL,'sourav','sourav@saha.com','Kolkata,West Bengal','CEKL12345A');
+
+insert into Customer values(seq_Customer.NEXTVAL,seq_Account_Master.CURRval,seq_User_Table.CURRVAL,'sushma','sushma@shakar.com','Banglore,Karnataka','AEKA12345P');
+
+insert into Customer values(seq_Customer.NEXTVAL,seq_Account_Master.CURRval,seq_User_Table.CURRVAL,'dhruvi','dhruvi@doshi.com','Surat,Gujarat','CEBA12345P');
+
+insert into Customer values(seq_Customer.NEXTVAL,seq_Account_Master.CURRval,seq_User_Table.CURRVAL,'bala','bala@sai.com','Hyderabad,Telangana','BEKA22345P');
+
+____________________________________________________________________________________________________________________________________________________________
+
+//Transactions VALUES
+
+
+
+insert into Transactions values(seq_Transactions.nextval,SYSDATE,'debit',12000,1001);
+
+insert into Transactions values(seq_Transactions.nextval,SYSDATE,'credit',24000,seq_TranAccount.nextval);
+
+insert into Transactions values(seq_Transactions.nextval,'Transaction failed! Please login again',SYSDATE,'debit',4000,seq_TranAccount.nextval);
+
+insert into Transactions values(seq_Transactions.nextval,'Your transaction is successful',SYSDATE,'debit',2000,seq_TranAccount.nextval);
+
+insert into Transactions values(seq_Transactions.nextval,'Transaction failed! Please login again',SYSDATE,'credit',11000,seq_TranAccount.nextval);
+
+
+//Service_Tracker values
+
+
+insert into Service_Tracker values(seq_Service_Tracker.nextval,seq_Account_Master.currval,SYSDATE,'open');
+
+insert into Service_Tracker values(seq_Service_Tracker.nextval,'cheque book dispatched',seq_Account_Master.currval,SYSDATE,'open');
+
+insert into Service_Tracker values(seq_Service_Tracker.nextval,'Cheque book returned to bank. Please visit the bank!',seq_Account_Master.currval,SYSDATE,'open');
+
+insert into Service_Tracker values(seq_Service_Tracker.nextval,'Cheque book cancelled',seq_Account_Master.currval,SYSDATE,'open');
+
+insert into Service_Tracker values(seq_Service_Tracker.nextval,'Cheque Book dispatched',seq_Account_Master.currval,SYSDATE,'open');
+
+
+
+
+
+
+//Fund_Transfer values
+
+
+
+insert into Fund_Transfer values(seq_Fund_Transfer.nextval,seq_Account_Master.currval,seq_PayeeTable.currval,SYSDATE,50000);
+
+insert into  Fund_Transfer values(seq_Fund_Transfer.nextval,seq_Account_Master.currval,seq_PayeeTable.currval,SYSDATE,70000);
+
+insert into Fund_Transfer values(seq_Fund_Transfer.nextval,seq_Account_Master.currval,seq_PayeeTable.currval,SYSDATE,100000);
+
+insert into Fund_Transfer values(seq_Fund_Transfer.nextval,seq_Account_Master.currval,seq_PayeeTable.currval,SYSDATE,20000);
+
+insert into Fund_Transfer values(seq_Fund_Transfer.nextval,seq_Account_Master.currval,seq_PayeeTable.currval,SYSDATE,70000);
+
+
+
+//PayeeTable values
+
+
+insert into PayeeTable values(seq_PayeeTable.nextval,seq_Account_Master.currval,'shubh');
+
+insert into PayeeTable values(seq_PayeeTable.nextval,seq_Account_Master.currval,'sush');
+
+insert into PayeeTable values(seq_PayeeTable.nextval,seq_Account_Master.currval,'bala');
+
+insert into PayeeTable values(seq_PayeeTable.nextval,seq_Account_Master.currval,'sourav');
+
+insert into PayeeTable values(seq_PayeeTable.nextval,seq_Account_Master.currval,'dhruvi');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public interface QueryMapper {
+		
+		public static final String VIEW_ALL_TRANSACTIONS="SELECT FundTransfer_ID, Account_ID, Payee_Account_ID, Date_Of_Transfer, Transfer_Amount FROM FUND_TRANSFER";
+		public static final String MINI_STATEMENT="SELECT Transaction_ID, DateofTransaction, TransactionType,TranAmount, Account_ID FROM Transactions where DateofTransaction BETWEEN ? and SYSDATE WHERE Account_no =?";
+		
+		public static final String SIGN_UP_ACCOUNT="INSERT into Account_Master values(seq_Account_Master.nextval,?,?,SYSDATE,seq_User_Table.currval)";
+		public static final String SIGN_UP_USER="INSERT INTO User_Table VALUES(seq_User_Table.NEXTVAL,?,?,?,'open')";
+		public static final String SIGN_UP_CUSTOMERS="INSERT INTO Customer VALUES(seq_Customer.NEXTVAL,seq_Account_Master.CURRval,seq_User_Table.CURRVAL,?,?,?,?)";
+		
+		public static final String LOGIN_USER="SELECT user_id, login_password from user_table WHERE USER_ID=?";
+		
+		public static final String UPDATE_USER_PASSWORD="UPDATE USER_TABLE SET LOGIN_PASSWORD=? WHERE USER_ID=?";
+		public static final String UPDATE_USER_DETAILS="UPDATE CUSTOMERS SET EMAIL_ID=?,ADDRESS=? WHERE USER_ID=?";
+		
+		public static final String REQUEST_CHEQUE_BOOK="insert into Service_Tracker values(seq_Service_Tracker.nextval,seq_Account_Master.currval,SYSDATE,'open')";
+		
+		public static final String CHECK_ID="SELECT ACCOUNT_ID FROM ACCOUNT_MASTER WHERE ACCOUNT_ID=?";
+		public static final String ADD_PAYEE="insert into Payee_Table values(?,?,?)";
+		public static final String UPDATE_USER_ACCOUNT="UPDATE ACCOUNT_MASTER SET Account_Balance=? WHERE ACCOUNT_ID=?";
+		public static final String UPDATE_TRANSACTION="insert into Transactions values(seq_Transactions.nextval,SYSDATE,?,?,?)";
+		public static final String UPDATE_FUND_TRANSFER="insert into Fund_Transfer values(seq_Fund_Transfer.nextval,?,?,SYSDATE,?)";
+		
+		public static final String TRACK_SERVICE="SELECT Service_ID, Account_ID, Service_Raised_Date,Service_status FROM Service_Tracker WHERE Service_ID=?";
+		
+		public static final String VALIDATE_USER="SELECT user_id FROM User_table where user_id=? and login_password=?";
+		public static final String GET_ACC_DETAILS="SELECT Account_master.account_id FROM Account_master INNER JOIN User_Table ON Account_master.user_id=User_Table.user_id and user_table.user_id=?";
+}
+	
